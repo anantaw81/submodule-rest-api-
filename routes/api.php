@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+use App\Http\Controllers\BlogController;
+Route::resource('/blogs', BlogController::class);
+
+Route::post('/v1/posts/store', 'App\Http\Controllers\api\v1\PostsController@store');
