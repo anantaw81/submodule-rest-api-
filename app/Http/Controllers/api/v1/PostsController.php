@@ -13,6 +13,17 @@ class PostsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+
+    public function index(){
+        $posts = Post::latest()->get();
+        return response(
+            [
+                'success' => true,
+                'message' => 'List Semua Posts',
+                'data' => $posts
+            ], 200);
+    }
+    
     public function store(Request $request)
     {
         //validate data
@@ -51,6 +62,86 @@ class PostsController extends Controller
                     'message' => 'Post Gagal Disimpan!',
                 ], 401);
             }
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id){
+        $post = Post::whereId($id)->first();
+
+        if($post){
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Detail Post!',
+                    'data' => $post
+                ], 200
+            );
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post Tidak Ditemukan!',
+                'data' => ''
+            ], 401);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request){
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required',
+        ], [
+            'title.required' => 'Masukkan title post!',
+            'content.required' => 'Masukkan contennt post!',
+        ]);
+
+        if($validator->fails()){
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Silahkan isi bidang yang kosong',
+                    'data' => $validator->errors()
+                ], 401
+            );
+        }else{
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Post gagal di update!',
+                ], 401
+            );
+        }
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id){
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        if($post){
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Post berhasil dihapus!',
+                ], 200
+            );
+        }else{
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Post gagal dihapus!'
+                ], 400
+            );
         }
     }
 }

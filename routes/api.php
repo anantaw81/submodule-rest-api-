@@ -22,3 +22,7 @@ use App\Http\Controllers\BlogController;
 Route::resource('/blogs', BlogController::class);
 
 Route::post('/v1/posts/store', 'App\Http\Controllers\api\v1\PostsController@store');
+Route::get('/v1/posts', 'App\Http\Controllers\api\v1\PostsController@index');
+Route::get('/v1/posts/{id?}', 'App\Http\Controllers\api\v1\PostsController@show');
+Route::get('/v1/posts/update', 'App\Http\Controllers\api\v1\PostsController@update');
+Route::delete('/v1/posts/{id?}', 'App\Http\Controllers\api\v1\PostsController@destroy');
